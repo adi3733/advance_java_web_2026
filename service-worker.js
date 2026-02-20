@@ -304,8 +304,8 @@ self.addEventListener('push', (event) => {
     const title = data.title || 'Advanced Java Code Vault';
     const options = {
         body: data.body || 'New Java experiments available!',
-        icon: '/assets/icons/icon-192.png',
-        badge: '/assets/icons/icon-72.png',
+        icon: 'https://img.icons8.com/color/192/java-coffee-cup-logo--v1.png',
+        badge: 'https://img.icons8.com/color/96/java-coffee-cup-logo--v1.png',
         vibrate: [200, 100, 200],
         data: {
             url: data.url || '/'

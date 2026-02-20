@@ -13,66 +13,22 @@
   "categories": ["education", "productivity", "developer tools"],
   "icons": [
     {
-      "src": "/assets/icons/icon-72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-96.png",
+      "src": "https://img.icons8.com/color/96/java-coffee-cup-logo--v1.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/icons/icon-128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-192.png",
+      "src": "https://img.icons8.com/color/192/java-coffee-cup-logo--v1.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icons/icon-384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-512.png",
+      "src": "https://img.icons8.com/color/512/java-coffee-cup-logo--v1.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/assets/Output/screenshot-mobile.png",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/assets/Output/screenshot-desktop.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
     }
   ],
   "shortcuts": [
@@ -83,7 +39,7 @@
       "url": "/?search=true",
       "icons": [
         {
-          "src": "/assets/icons/icon-192.png",
+          "src": "https://img.icons8.com/color/192/java-coffee-cup-logo--v1.png",
           "sizes": "192x192",
           "type": "image/png"
         }

@@ -80,6 +80,32 @@
           "value": "public, max-age=2592000, stale-while-revalidate=86400"
         }
       ]
+    },
+    {
+      "source": "/assets/PR_MANUAL/(.*)\\\\.(pdf)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/pdf"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/assets/PR_MANUAL/(.*)\\\\.(docx)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
   "rewrites": [
