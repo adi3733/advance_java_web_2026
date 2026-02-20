@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Advanced Java Code Vault - Java practical programs for engineering students">
+    <meta name="theme-color" content="#0f3460">
+    <title>Advanced Java Code Vault</title>
+    
+    <!-- Prism.js for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/96/java-coffee-cup-logo--v1.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://img.icons8.com/color/192/java-coffee-cup-logo--v1.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/color/512/java-coffee-cup-logo--v1.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/java-coffee-cup-logo--v1.png">
+</head>
+<body>
+    <!-- Background Gradient Animation -->
+    <div class="gradient-bg"></div>
+    
+    <!-- Update Notification -->
+    <div id="updateNotification" class="update-notification hidden">
+        <div class="update-content">
+            <span>🚀 New version available!</span>
+            <button id="updateBtn" class="update-btn">Update Now</button>
+            <button id="dismissBtn" class="dismiss-btn">×</button>
+        </div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header glass-card">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <img src="https://img.icons8.com/color/96/java-coffee-cup-logo--v1.png" alt="Java Logo" />
+                    </div>
+                    <div class="title-group">
+                        <h1 class="main-title">Advanced Java Code Vault</h1>
+                        <p class="subtitle">Your Ultimate Java Practicals Collection</p>
+                    </div>
+                </div>
+                
+                <div class="header-search">
+                    <div class="search-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search experiments...">
+                        <button id="clearSearch" class="clear-btn hidden">×</button>
+                    </div>
+                    <div class="search-stats">
+                        <span id="resultsCount">8 experiments</span>
+                    </div>
+                </div>
+                
+                <button id="openManualsBtn" class="manuals-btn" title="View & Download PDF Manuals">
+                    <span class="manuals-icon">📚</span>
+                    <span class="manuals-text">Download Manual</span>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Experiments Grid -->
+        <div id="experimentsGrid" class="experiments-grid">
+            <!-- Cards will be generated dynamically by JavaScript -->
+        </div>
+        
+        <!-- No Results Message -->
+        <div id="noResults" class="no-results hidden">
+            <div class="no-results-icon">🔍</div>
+            <h3>No experiments found</h3>
+            <p>Try adjusting your search terms</p>
+        </div>
+        
+        <!-- Warning Banner -->
+        <div class="warning-banner glass-card">
+            <span class="warning-icon">⚠️</span>
+            <p><strong>Educational Use Only:</strong> This resource is for learning purposes. Practice coding yourself - don't just copy in exams!</p>
+            <button id="openOutputsBtn" class="outputs-btn" title="Download Output Files">
+                <span>📁</span>
+                <span>Download Output</span>
+            </button>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>Made with ❤️ for Engineering Students</p>
+                <p class="footer-note">Master Java through practice, not shortcuts</p>
+                <p class="footer-attribution">
+                    <a href="https://icons8.com/icon/lTKW3iI3wIT0/java" target="_blank" rel="noopener noreferrer">Java icon</a> by 
+                    <a href="https://icons8.com" target="_blank" rel="noopener noreferrer">Icons8</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Code Viewer Modal -->
+    <div id="codeModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <h2 id="modalTitle" class="modal-title">Experiment Title</h2>
+                    <p id="modalDescription" class="modal-description">Description</p>
+                </div>
+                <div class="modal-actions">
+                    <button id="closeModal" class="close-btn" aria-label="Close">×</button>
+                </div>
+            </div>
+            
+            <div class="modal-body">
+                <!-- File Tabs -->
+                <div id="fileTabs" class="file-tabs">
+                    <!-- Tabs will be generated dynamically -->
+                </div>
+                
+                <!-- Code Container -->
+                <div class="code-container">
+                    <div class="code-header">
+                        <span id="currentFileName" class="file-name">File.java</span>
+                        <button id="copyCodeBtn" class="copy-btn">
+                            <span class="copy-icon">📋</span>
+                            <span class="copy-text">Copy Code</span>
+                        </button>
+                    </div>
+                    
+                    <div class="code-wrapper">
+                        <pre><code id="codeContent" class="language-java">// Code will be loaded here...</code></pre>
+                    </div>
+                    
+                    <div id="copyFeedback" class="copy-feedback hidden">
+                        <span class="checkmark">✓</span> Code copied to clipboard!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner hidden">
+        <div class="spinner"></div>
+        <p>Loading code...</p>
+    </div>
+    
+    <!-- Manuals Modal -->
+    <div id="manualsModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="manuals-modal glass-card">
+            <div class="manuals-header">
+                <div class="manuals-title-section">
+                    <span class="manuals-header-icon">📚</span>
+                    <div>
+                        <h2 class="manuals-title">Experiment Manuals</h2>
+                        <p class="manuals-subtitle">Preview and download PDF manuals</p>
+                    </div>
+                </div>
+                <button id="closeManualsModal" class="close-btn" aria-label="Close">×</button>
+            </div>
+            
+            <div class="manuals-content">
+                <div class="manuals-list">
+                    <div id="manualsList" class="manuals-grid">
+                        <!-- Manual items will be generated dynamically -->
+                    </div>
+                </div>
+                
+                <div class="manuals-preview">
+                    <div id="previewPlaceholder" class="preview-placeholder">
+                        <div class="preview-icon">📄</div>
+                        <p>Select a manual to preview</p>
+                    </div>
+                    <div id="previewContainer" class="preview-container hidden">
+                        <div class="preview-header">
+                            <h3 id="previewTitle" class="preview-title">Manual Preview</h3>
+                            <button id="downloadPreviewBtn" class="preview-download-btn">
+                                <span>⬇️</span>
+                                <span>Download PDF</span>
+                            </button>
+                        </div>
+                        <iframe id="pdfPreview" class="pdf-preview" title="PDF Preview"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Outputs Modal -->
+    <div id="outputsModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="outputs-modal glass-card">
+            <div class="outputs-header">
+                <div class="outputs-title-section">
+                    <span class="outputs-header-icon">📁</span>
+                    <div>
+                        <h2 class="outputs-title">Experiment Outputs</h2>
+                        <p class="outputs-subtitle">Preview and download output files (PDF & DOCX)</p>
+                    </div>
+                </div>
+                <button id="closeOutputsModal" class="close-btn" aria-label="Close">×</button>
+            </div>
+            
+            <div class="outputs-content">
+                <div class="outputs-list">
+                    <div id="outputsList" class="outputs-grid">
+                        <!-- Output items will be generated dynamically -->
+                    </div>
+                </div>
+                
+                <div class="outputs-preview">
+                    <div id="outputPreviewPlaceholder" class="preview-placeholder">
+                        <div class="preview-icon">📄</div>
+                        <p>Select an output file to preview</p>
+                        <small style="color: var(--text-secondary); margin-top: 0.5rem;">Both PDF and DOCX files can be previewed</small>
+                    </div>
+                    <div id="outputPreviewContainer" class="preview-container hidden">
+                        <div class="preview-header">
+                            <h3 id="outputPreviewTitle" class="preview-title">Output Preview</h3>
+                            <button id="downloadOutputBtn" class="preview-download-btn">
+                                <span>⬇️</span>
+                                <span>Download File</span>
+                            </button>
+                        </div>
+                        <iframe id="outputPdfPreview" class="pdf-preview" title="Output Preview"></iframe>
+                        <div id="outputDocxPreview" class="docx-preview-container hidden"></div>
+                        <div id="outputDocxLoading" class="docx-loading hidden">
+                            <div class="loading-spinner">
+                                <div class="spinner"></div>
+                            </div>
+                            <p>Loading DOCX preview...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Prism.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"></script>
+    
+    <!-- Mammoth.js for DOCX Preview -->
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+    
+    <!-- Main Application Script -->
+    <script src="script.js"></script>
+</body>
+</html>

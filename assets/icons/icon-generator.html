@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon Generator - Java Code Vault</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0e27, #16213e);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            text-align: left;
+        }
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .icon-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        canvas {
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        canvas:hover {
+            transform: scale(1.05);
+        }
+        .size-label {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #06ffa5;
+        }
+        button {
+            background: linear-gradient(135deg, #4361ee, #f72585);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 20px 10px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .note {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255, 190, 11, 0.1);
+            border-left: 4px solid #ffbe0b;
+            border-radius: 5px;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>☕ PWA Icon Generator</h1>
+    
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Click on any icon to download it</li>
+            <li>Right-click → "Save image as..."</li>
+            <li>Save with filename: <code>icon-{size}.png</code></li>
+            <li>Place all icons in <code>assets/icons/</code> folder</li>
+        </ol>
+        <button onclick="downloadAll()">Download All (Experimental)</button>
+    </div>
+    
+    <div class="icons-grid" id="iconsGrid"></div>
+    
+    <div class="note">
+        <strong>Note:</strong> These are placeholder icons with gradient background and coffee emoji. 
+        For production, consider creating a custom logo using design tools like Figma, Canva, or Adobe Illustrator.
+    </div>
+    
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const iconsGrid = document.getElementById('iconsGrid');
+        
+        sizes.forEach(size => {
+            createIcon(size);
+        });
+        
+        function createIcon(size) {
+            const card = document.createElement('div');
+            card.className = 'icon-card';
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            canvas.style.width = '150px';
+            canvas.style.height = '150px';
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#4361ee');
+            gradient.addColorStop(0.5, '#7209b7');
+            gradient.addColorStop(1, '#f72585');
+            
+            // Draw rounded rectangle background
+            const radius = size * 0.15;
+            ctx.fillStyle = gradient;
+            roundRect(ctx, 0, 0, size, size, radius);
+            ctx.fill();
+            
+            // Draw coffee emoji
+            ctx.font = `${size * 0.5}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('☕', size / 2, size / 2);
+            
+            // Add small "JV" text at bottom
+            ctx.font = `bold ${size * 0.15}px Arial`;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fillText('Java Vault', size / 2, size * 0.85);
+            
+            const label = document.createElement('div');
+            label.className = 'size-label';
+            label.textContent = `${size}×${size}px`;
+            
+            card.appendChild(canvas);
+            card.appendChild(label);
+            iconsGrid.appendChild(card);
+            
+            // Download on click
+            canvas.addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = `icon-${size}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+        
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+        
+        function downloadAll() {
+            alert('Click each icon individually to download. Browser security prevents bulk downloads.');
+        }
+    </script>
+</body>
+</html>

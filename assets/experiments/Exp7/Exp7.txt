@@ -1,0 +1,42 @@
+// A database application that uses any JDBC driver.
+// import sql package to use it in our program
+import java.sql.*;
+
+public class databaseApplication
+{
+    public static void main(String[] args) throws ClassNotFoundException, SQLException
+    {
+        // store the SQL statement in a string
+        String QUERY = "select * from employee_details";
+
+        // register the oracle driver with DriverManager
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        // Here we have used Java 8 so opening the connection in try statement
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "1234"))
+        {
+            Statement statemnt1 = conn.createStatement();
+            // Created statement and execute it
+            ResultSet rs1 = statemnt1.executeQuery(QUERY);
+
+            // Get the values of the record using while loop
+            while (rs1.next())
+            {
+                int empNumber = rs1.getInt("empNumber");
+                String lastName = rs1.getString("lastName");
+                String firstName = rs1.getString("firstName");
+                String email = rs1.getString("email");
+                String deptNum = rs1.getString("deptNum");
+                String salary = rs1.getString("salary");
+
+                // store the values which are retrieved using ResultSet and print it
+                System.out.println(empNumber + "," + lastName + "," + firstName + "," + email + "," + deptNum + "," + salary);
+            }
+        }
+        catch (SQLException e)
+        {
+            // If exception occurs catch it and exit the program
+            e.printStackTrace();
+        }
+    }
+}

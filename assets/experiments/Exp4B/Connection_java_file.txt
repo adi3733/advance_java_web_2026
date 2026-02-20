@@ -1,0 +1,43 @@
+// Java Program to Insert Details in a Table using JDBC
+// Connections class
+// Importing all SQL classes
+// Showing linking of created database
+import java.sql.*;
+
+public class connection
+{
+    // object of Connection class
+    // initially assigned NULL
+    Connection con = null;
+
+    public static Connection connectDB()
+    {
+        try
+        {
+            // Step 2 is involved among 7 in Connection
+            // class i.e Load and register drivers
+            // 2(a) Loading drivers using forName() method
+            // name of database here is mysql
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // 2(b) Registering drivers using DriverManager
+            Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/college",
+                "root", "1234");
+
+            // For college Database here (custom sets)
+            // root is the username, and
+            // 1234 is the password
+            // returning the object of Connection class
+            // to be used in main class (Example2)
+            return con;
+        }
+        // Catch block to handle the exceptions
+        catch (SQLException | ClassNotFoundException e)
+        {
+            // Print the exceptions
+            System.out.println(e);
+            return null;
+        }
+    }
+}
