@@ -1,0 +1,14 @@
+CREATE DATABASE college;
+USE college;
+
+CREATE TABLE collegedata (
+    name VARCHAR(50),
+    short VARCHAR(10),
+    email VARCHAR(50),
+    address VARCHAR(100),
+    phno VARCHAR(15)
+);
+
+INSERT INTO collegedata VALUES ('RMDSTIC', 'RMD', 'rmd@college.com', 'Pune', '987654321');
+INSERT INTO collegedata VALUES ('SKNCOE', 'SKN', 'SKN@college.com', 'Pune', '9595955556');
+SELECT * FROM collegedata;

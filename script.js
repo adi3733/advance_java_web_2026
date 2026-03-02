@@ -45,7 +45,8 @@ const experiments = [
         description: 'Basic database connection demonstration with MySQL including driver loading, connection establishment, and SELECT queries.',
         icon: '🗄️',
         files: [
-            { name: 'databaseClass.java', path: 'assets/experiments/Exp4A/Exp4A.txt' }
+            { name: 'databaseClass.java', path: 'assets/experiments/Exp4A/Exp4A.txt' },
+            { name: 'SQL Script4A.sql', path: 'assets/experiments/Exp4A/SQL Script4A.txt' }
         ],
         manual: 'assets/PR_MANUAL/PR_MANUAL/Experiment No 4.pdf',
         tags: ['jdbc', 'mysql', 'database', 'sql']
@@ -58,7 +59,8 @@ const experiments = [
         icon: '💾',
         files: [
             { name: 'Connection.java', path: 'assets/experiments/Exp4B/Connection_java_file.txt' },
-            { name: 'GFG.java', path: 'assets/experiments/Exp4B/GFG_java_file.txt' }
+            { name: 'GFG.java', path: 'assets/experiments/Exp4B/GFG_java_file.txt' },
+            { name: 'SQL Script4B.sql', path: 'assets/experiments/Exp4B/SQL Script4B.txt' }
         ],
         manual: 'assets/PR_MANUAL/PR_MANUAL/Experiment No 4.pdf',
         tags: ['jdbc', 'mysql', 'database', 'prepared-statement']
@@ -106,7 +108,8 @@ const experiments = [
         description: 'Complete database application with JDBC driver registration and ResultSet processing for employee records retrieval.',
         icon: '👥',
         files: [
-            { name: 'databaseApplication.java', path: 'assets/experiments/Exp7/Exp7.txt' }
+            { name: 'databaseApplication.java', path: 'assets/experiments/Exp7/Exp7.txt' },
+            { name: 'SQL Script 7.sql', path: 'assets/experiments/Exp7/SQL Script 7.txt' }
         ],
         manual: 'assets/PR_MANUAL/PR_MANUAL/Experiment No 7.pdf',
         tags: ['jdbc', 'database', 'employee', 'resultset']
