@@ -124,7 +124,8 @@ const experiments = [
             { name: 'Hello.java', path: 'assets/experiments/Exp8/1.Defining the Remote Interface/Hello_java.txt' },
             { name: 'ImplExample.java', path: 'assets/experiments/Exp8/2.Developing the Implementation Class (Remote Object)/ImplExample_java.txt' },
             { name: 'Server.java', path: 'assets/experiments/Exp8/3.Developing the Server Program/Server_java.txt' },
-            { name: 'Client.java', path: 'assets/experiments/Exp8/4.Developing the Client Program/Client_java.txt' }
+            { name: 'Client.java', path: 'assets/experiments/Exp8/4.Developing the Client Program/Client_java.txt' },
+            { name: 'Steps.txt', path: 'assets/experiments/Exp8/Steps.txt' }
         ],
         manual: 'assets/PR_MANUAL/PR_MANUAL/Experiment No 8.pdf',
         tags: ['rmi', 'networking', 'distributed', 'remote']

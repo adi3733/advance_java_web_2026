@@ -1,0 +1,28 @@
+JAVA RMI EXECUTION STEPS (SHORT)
+
+Step 1: Go to project folder
+cd your_project_folder
+
+Step 2: Compile files
+javac *.java
+
+Step 3: Start RMI Registry (Window 1)
+rmiregistry
+
+Step 4: Run Server (Window 2)
+java Server
+
+Output:
+Server ready
+
+Step 5: Run Client (Window 3)
+java Client
+
+Output:
+Server says: This is an example RMI program
+
+Correct Order:
+javac *.java
+rmiregistry
+java Server
+java Client
