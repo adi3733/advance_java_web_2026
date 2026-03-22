@@ -69,6 +69,31 @@
             </div>
         </header>
         
+        <!-- Version Info Section - Collapsible -->
+        <div id="version-info">
+          <div class="version-content">
+            <div class="version-badge" id="version-toggle">
+              <span class="version-icon">✨</span>
+              <span class="version-text">v<span id="current-version">1</span></span>
+            </div>
+            <div class="version-expanded hidden">
+              <button id="check-updates" class="version-check-btn">
+                <span class="check-icon">🔄</span>
+                <span class="check-text">Check Updates</span>
+              </button>
+            </div>
+          </div>
+          <div id="update-log" class="update-log hidden">
+            <div class="update-log-header">
+              <h4>Update Log:</h4>
+              <button class="close-log-btn">×</button>
+            </div>
+            <ul id="log-list">
+              <!-- Logs will be dynamically added here -->
+            </ul>
+          </div>
+        </div>
+        
         <!-- Experiments Grid -->
         <div id="experimentsGrid" class="experiments-grid">
             <!-- Cards will be generated dynamically by JavaScript -->
@@ -255,5 +280,163 @@
     
     <!-- Main Application Script -->
     <script src="script.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+              console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch((error) => {
+              console.error('Service Worker registration failed:', error);
+            });
+        });
+      }
+    </script>
+
+    <!-- Version Info Functionality with Auto-Update -->
+    <script>
+      // Version Control System
+      let localVersion = localStorage.getItem('app-version') || '1.0.0';
+      let latestVersion = '1.0.0';
+
+      const versionBadge = document.getElementById('version-toggle');
+      const versionExpanded = document.querySelector('.version-expanded');
+      const checkUpdatesBtn = document.getElementById('check-updates');
+      const updateLog = document.getElementById('update-log');
+      const logList = document.getElementById('log-list');
+      const closeLogBtn = document.querySelector('.close-log-btn');
+      const currentVersionSpan = document.getElementById('current-version');
+
+      // Fetch version info on page load
+      async function initializeVersionControl() {
+        try {
+          const response = await fetch('/version.json');
+          const versionData = await response.json();
+          
+          latestVersion = versionData.current;
+          currentVersionSpan.textContent = latestVersion;
+          
+          // Store in localStorage
+          localStorage.setItem('app-version', latestVersion);
+          
+          console.log(`✅ Current Version: ${latestVersion}`);
+          
+          // Check if update is available
+          if (latestVersion !== localVersion) {
+            console.log(`🚀 New version available! ${localVersion} → ${latestVersion}`);
+            showUpdateNotification(latestVersion);
+          }
+          
+          // Notify service worker to check version
+          if (navigator.serviceWorker.controller) {
+            const channel = new MessageChannel();
+            navigator.serviceWorker.controller.postMessage(
+              { type: 'CHECK_VERSION' },
+              [channel.port2]
+            );
+            
+            channel.port1.onmessage = (event) => {
+              if (event.data.type === 'VERSION_INFO') {
+                console.log('Service Worker Version Info:', event.data);
+              }
+            };
+          }
+        } catch (error) {
+          console.error('Failed to initialize version control:', error);
+          currentVersionSpan.textContent = localVersion;
+        }
+      }
+
+      // Show update notification
+      function showUpdateNotification(newVersion) {
+        const notification = document.getElementById('updateNotification');
+        if (notification) {
+          notification.classList.remove('hidden');
+          document.getElementById('updateBtn').addEventListener('click', () => {
+            // Clear all caches and reload
+            if ('caches' in window) {
+              caches.keys().then((names) => {
+                names.forEach(name => {
+                  caches.delete(name);
+                });
+              }).then(() => {
+                // Reload service worker
+                if (navigator.serviceWorker.controller) {
+                  navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+                }
+                // Reload page
+                window.location.reload(true);
+              });
+            }
+          });
+        }
+      }
+
+      // Toggle version info expansion
+      versionBadge.addEventListener('click', () => {
+        versionExpanded.classList.toggle('hidden');
+      });
+
+      // Check updates button
+      checkUpdatesBtn.addEventListener('click', async () => {
+        try {
+          // Fetch update logs
+          const response = await fetch('/update-logs.json');
+          const logs = await response.json();
+          
+          // Show update log dropdown
+          updateLog.classList.toggle('hidden');
+          
+          if (!updateLog.classList.contains('hidden')) {
+            // Clear and populate logs for current version
+            logList.innerHTML = '';
+            const versionKey = `v${latestVersion.split('.')[0]}`;
+            
+            if (logs[versionKey]) {
+              logs[versionKey].forEach(log => {
+                const li = document.createElement('li');
+                li.textContent = log;
+                logList.appendChild(li);
+              });
+            } else if (logs[latestVersion]) {
+              logs[latestVersion].forEach(log => {
+                const li = document.createElement('li');
+                li.textContent = log;
+                logList.appendChild(li);
+              });
+            } else {
+              const li = document.createElement('li');
+              li.textContent = 'No updates available for this version';
+              logList.appendChild(li);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch update logs:', error);
+        }
+      });
+
+      // Close log button
+      if (closeLogBtn) {
+        closeLogBtn.addEventListener('click', () => {
+          updateLog.classList.add('hidden');
+        });
+      }
+
+      // Close when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#version-info')) {
+          updateLog.classList.add('hidden');
+          versionExpanded.classList.add('hidden');
+        }
+      });
+
+      // Initialize version control on page load
+      window.addEventListener('load', () => {
+        initializeVersionControl();
+      });
+    </script>
 </body>
 </html>

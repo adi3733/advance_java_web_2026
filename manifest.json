@@ -1,6 +1,6 @@
 {
-  "name": "Advanced Java Code Vault",
-  "short_name": "Java Vault",
+  "name": "Website Of Codes",
+  "short_name": "Codes",
   "description": "Your ultimate collection of Java practical programs for engineering students. Features glassmorphism UI, offline access, and one-click code copying.",
   "start_url": "/",
   "display": "standalone",

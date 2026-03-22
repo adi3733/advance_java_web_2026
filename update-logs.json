@@ -1,0 +1,28 @@
+{
+  "v1": [
+    "Initial release."
+  ],
+  "v2": [
+    "Added new features.",
+    "Improved performance.",
+    "Fixed bugs."
+  ],
+  "1.0.0": [
+    "Initial release",
+    "Offline support enabled",
+    "Version control system implemented",
+    "Auto-update functionality added"
+  ],
+  "1.1.0": [
+    "Enhanced UI/UX",
+    "Added new experiments",
+    "Improved performance",
+    "Bug fixes and optimizations"
+  ],
+  "1.2.0": [
+    "Major feature update",
+    "New experiment manuals",
+    "Improved search functionality",
+    "Better offline caching"
+  ]
+}
