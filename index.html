@@ -285,14 +285,27 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
+          navigator.serviceWorker.register('service-worker.js')
             .then((registration) => {
-              console.log('Service Worker registered with scope:', registration.scope);
+              console.log('✅ Service Worker registered successfully');
+              console.log('Scope:', registration.scope);
+              
+              // Listen for updates
+              registration.onupdatefound = () => {
+                const newWorker = registration.installing;
+                newWorker.onstatechange = () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('🔄 New Service Worker available');
+                  }
+                };
+              };
             })
             .catch((error) => {
-              console.error('Service Worker registration failed:', error);
+              console.error('❌ Service Worker registration failed:', error);
             });
         });
+      } else {
+        console.warn('⚠️ Service Workers not supported in this browser');
       }
     </script>
 
@@ -312,17 +325,21 @@
 
       // Fetch version info on page load
       async function initializeVersionControl() {
+        console.log('🔄 Initializing version control...');
         try {
-          const response = await fetch('/version.json');
-          const versionData = await response.json();
+          const response = await fetch('version.json', { cache: 'no-store' });
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
           
+          const versionData = await response.json();
           latestVersion = versionData.current;
           currentVersionSpan.textContent = latestVersion;
           
           // Store in localStorage
           localStorage.setItem('app-version', latestVersion);
           
-          console.log(`✅ Current Version: ${latestVersion}`);
+          console.log(`✅ Version loaded: ${latestVersion}`);
           
           // Check if update is available
           if (latestVersion !== localVersion) {
@@ -331,7 +348,7 @@
           }
           
           // Notify service worker to check version
-          if (navigator.serviceWorker.controller) {
+          if (navigator.serviceWorker && navigator.serviceWorker.controller) {
             const channel = new MessageChannel();
             navigator.serviceWorker.controller.postMessage(
               { type: 'CHECK_VERSION' },
@@ -340,12 +357,12 @@
             
             channel.port1.onmessage = (event) => {
               if (event.data.type === 'VERSION_INFO') {
-                console.log('Service Worker Version Info:', event.data);
+                console.log('📦 Service Worker Version Info:', event.data);
               }
             };
           }
         } catch (error) {
-          console.error('Failed to initialize version control:', error);
+          console.error('❌ Failed to initialize version control:', error);
           currentVersionSpan.textContent = localVersion;
         }
       }
@@ -354,69 +371,103 @@
       function showUpdateNotification(newVersion) {
         const notification = document.getElementById('updateNotification');
         if (notification) {
+          console.log('🔔 Showing update notification');
           notification.classList.remove('hidden');
-          document.getElementById('updateBtn').addEventListener('click', () => {
-            // Clear all caches and reload
-            if ('caches' in window) {
-              caches.keys().then((names) => {
-                names.forEach(name => {
-                  caches.delete(name);
+          
+          const updateBtn = document.getElementById('updateBtn');
+          const dismissBtn = document.getElementById('dismissBtn');
+          
+          if (updateBtn) {
+            updateBtn.addEventListener('click', () => {
+              console.log('📥 Update Now clicked - clearing caches and reloading');
+              // Clear all caches and reload
+              if ('caches' in window) {
+                caches.keys().then((names) => {
+                  console.log(`Found ${names.length} caches to clear`);
+                  names.forEach(name => {
+                    caches.delete(name).then(() => {
+                      console.log(`✅ Deleted cache: ${name}`);
+                    });
+                  });
+                }).then(() => {
+                  // Reload service worker
+                  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+                  }
+                  // Reload page with hard refresh
+                  setTimeout(() => {
+                    console.log('🔄 Reloading page...');
+                    window.location.reload(true);
+                  }, 500);
                 });
-              }).then(() => {
-                // Reload service worker
-                if (navigator.serviceWorker.controller) {
-                  navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
-                }
-                // Reload page
-                window.location.reload(true);
-              });
-            }
-          });
+              }
+            });
+          }
+          
+          if (dismissBtn) {
+            dismissBtn.addEventListener('click', () => {
+              notification.classList.add('hidden');
+            });
+          }
         }
       }
 
       // Toggle version info expansion
-      versionBadge.addEventListener('click', () => {
-        versionExpanded.classList.toggle('hidden');
-      });
+      if (versionBadge) {
+        versionBadge.addEventListener('click', () => {
+          console.log('Toggling version info');
+          versionExpanded.classList.toggle('hidden');
+        });
+      }
 
       // Check updates button
-      checkUpdatesBtn.addEventListener('click', async () => {
-        try {
-          // Fetch update logs
-          const response = await fetch('/update-logs.json');
-          const logs = await response.json();
-          
-          // Show update log dropdown
-          updateLog.classList.toggle('hidden');
-          
-          if (!updateLog.classList.contains('hidden')) {
-            // Clear and populate logs for current version
-            logList.innerHTML = '';
-            const versionKey = `v${latestVersion.split('.')[0]}`;
-            
-            if (logs[versionKey]) {
-              logs[versionKey].forEach(log => {
-                const li = document.createElement('li');
-                li.textContent = log;
-                logList.appendChild(li);
-              });
-            } else if (logs[latestVersion]) {
-              logs[latestVersion].forEach(log => {
-                const li = document.createElement('li');
-                li.textContent = log;
-                logList.appendChild(li);
-              });
-            } else {
-              const li = document.createElement('li');
-              li.textContent = 'No updates available for this version';
-              logList.appendChild(li);
+      if (checkUpdatesBtn) {
+        checkUpdatesBtn.addEventListener('click', async () => {
+          console.log('Checking updates...');
+          try {
+            // Fetch update logs
+            const response = await fetch('update-logs.json', { cache: 'no-store' });
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
             }
+            
+            const logs = await response.json();
+            
+            // Show update log dropdown
+            updateLog.classList.toggle('hidden');
+            
+            if (!updateLog.classList.contains('hidden')) {
+              // Clear and populate logs for current version
+              logList.innerHTML = '';
+              const versionKey = `v${latestVersion.split('.')[0]}`;
+              
+              if (logs[versionKey]) {
+                console.log(`Found logs for ${versionKey}`);
+                logs[versionKey].forEach(log => {
+                  const li = document.createElement('li');
+                  li.textContent = log;
+                  logList.appendChild(li);
+                });
+              } else if (logs[latestVersion]) {
+                console.log(`Found logs for ${latestVersion}`);
+                logs[latestVersion].forEach(log => {
+                  const li = document.createElement('li');
+                  li.textContent = log;
+                  logList.appendChild(li);
+                });
+              } else {
+                console.log('No logs found for this version');
+                const li = document.createElement('li');
+                li.textContent = 'No updates available for this version';
+                logList.appendChild(li);
+              }
+            }
+          } catch (error) {
+            console.error('❌ Failed to fetch update logs:', error);
+            logList.innerHTML = '<li>Error loading update logs</li>';
           }
-        } catch (error) {
-          console.error('Failed to fetch update logs:', error);
-        }
-      });
+        });
+      }
 
       // Close log button
       if (closeLogBtn) {
@@ -429,14 +480,31 @@
       document.addEventListener('click', (e) => {
         if (!e.target.closest('#version-info')) {
           updateLog.classList.add('hidden');
-          versionExpanded.classList.add('hidden');
+          if (versionExpanded) {
+            versionExpanded.classList.add('hidden');
+          }
         }
       });
 
       // Initialize version control on page load
       window.addEventListener('load', () => {
+        console.log('Page loaded - initializing version control');
         initializeVersionControl();
+        
+        // Also check if caches exist
+        if ('caches' in window) {
+          caches.keys().then((names) => {
+            console.log(`📦 Available caches: ${names.join(', ')}`);
+          });
+        }
       });
+
+      // Also try to initialize on DOMContentLoaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          console.log('DOM loaded');
+        });
+      }
     </script>
 </body>
 </html>
